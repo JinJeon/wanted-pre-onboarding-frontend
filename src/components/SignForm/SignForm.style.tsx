@@ -86,14 +86,11 @@ export const OptionButton = styled.button`
 export const ErrorMessage = styled.div<{ isError: boolean }>`
   ${({ theme: { colors }, isError }) => css`
     background-color: ${colors.red};
-    height: ${commonHeight};
+    min-height: ${commonHeight};
     line-height: 1.5rem;
     border-radius: 0.5rem;
     width: 100%;
     padding: 0.25rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     font-size: 0.8rem;
     font-weight: 700;
 

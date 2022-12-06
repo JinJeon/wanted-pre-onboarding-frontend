@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { SignOptionType, sign } from "@api/auth";
 import Button from "@components/Button";
 import * as S from "@components/SignForm/SignForm.style";
+import { failToLogin, successToSignUp } from "@constants/sentences";
 import { CANCEL, EMAIL, PASSWORD, SIGNIN, SIGNUP } from "@constants/words";
 import { useDebounce } from "@hooks/useDebounce";
 import { pathName } from "@router";
@@ -12,7 +13,7 @@ import { isEmailExp } from "@utils/regExp";
 
 type SignFormPropsType = {
   signOption: SignOptionType;
-  onClickOptionButton: () => void;
+  changeSignOption: () => void;
   receivedMessage?: string;
 };
 
@@ -38,7 +39,7 @@ const optionalTexts: OptionalTextsType = {
   },
 };
 
-const SignForm = ({ signOption, onClickOptionButton, receivedMessage }: SignFormPropsType) => {
+const SignForm = ({ signOption, changeSignOption, receivedMessage }: SignFormPropsType) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(receivedMessage || "");
@@ -47,14 +48,24 @@ const SignForm = ({ signOption, onClickOptionButton, receivedMessage }: SignForm
   const { title, submitButtonText, optionButtonText } = optionalTexts[signOption];
   const showedPassword = "•".repeat(password.length);
 
+  const navigateToOtherOption = () => {
+    setPassword("");
+    setEmail("");
+    changeSignOption();
+  };
+
   const checkSign = async (event: FormEvent) => {
     event.preventDefault();
 
     const { isSuccess, errorMessage } = await sign({ email, password, signOption });
-    if (isSuccess) {
+
+    if (isSuccess && signOption === "signin") {
       navigate(pathName.todo);
+    } else if (isSuccess && signOption === "signup") {
+      navigateToOtherOption();
+      setMessage(successToSignUp);
     } else if (errorMessage) {
-      setMessage(errorMessage);
+      setMessage(`${failToLogin}(${errorMessage})`);
     }
   };
 
@@ -81,9 +92,7 @@ const SignForm = ({ signOption, onClickOptionButton, receivedMessage }: SignForm
   const handleClickOptionButton = useCallback(
     (event?: MouseEvent<HTMLButtonElement>) => {
       event && event.preventDefault();
-      setPassword("");
-      setEmail("");
-      onClickOptionButton();
+      navigateToOtherOption();
     },
     [signOption],
   );
@@ -105,8 +114,8 @@ const SignForm = ({ signOption, onClickOptionButton, receivedMessage }: SignForm
         value={showedPassword}
       />
       <S.ButtonsWrapper>
-        <Button onClick={handleClickOptionButton} text={optionButtonText} color='blue' />
         <Button text={submitButtonText} color='yellow' disabled={!isSubmitPossible} />
+        <Button onClick={handleClickOptionButton} text={optionButtonText} color='blue' />
       </S.ButtonsWrapper>
       <S.ErrorMessage isError={!!message.length}>{message}</S.ErrorMessage>
     </S.SignForm>

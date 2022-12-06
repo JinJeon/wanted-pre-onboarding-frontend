@@ -18,7 +18,7 @@ const Sign = () => {
     <S.Wrapper>
       <SignForm
         signOption={signOption}
-        onClickOptionButton={changeSignOption}
+        changeSignOption={changeSignOption}
         receivedMessage={receivedMessage}
       />
     </S.Wrapper>
