@@ -23,6 +23,12 @@ const GlobalStyle = createGlobalStyle`
     .App {
       padding: 1rem;
       height: 100vh;
+      font-weight: 600;
+    }
+
+    button,
+    input {
+      font-weight: 600;
     }
   `}`;
 
