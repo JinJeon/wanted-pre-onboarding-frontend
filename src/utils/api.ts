@@ -1,6 +1,12 @@
 import axios, { AxiosError, RawAxiosRequestHeaders } from "axios";
 
-import { AUTHORIZATION, CONTENT_TYPE, APPLICATION_JSON, BEARER } from "@constants/words";
+import {
+  AUTHORIZATION,
+  CONTENT_TYPE,
+  APPLICATION_JSON,
+  BEARER,
+  ACCESS_TOKEN,
+} from "@constants/words";
 import { getLocalStorageInfo } from "@utils/localStorage";
 
 import { unexpectedErrorOccurs } from "./../constants/sentences";
@@ -23,7 +29,7 @@ export const useFetch = ({ address, isContentType, isAuth }: UseFetchParamsType)
     headers[CONTENT_TYPE] = APPLICATION_JSON;
   }
   if (isAuth) {
-    const accessToken = getLocalStorageInfo("access-token");
+    const accessToken = getLocalStorageInfo({ key: ACCESS_TOKEN });
     headers[AUTHORIZATION] = `${BEARER} ${accessToken}`;
   }
 
