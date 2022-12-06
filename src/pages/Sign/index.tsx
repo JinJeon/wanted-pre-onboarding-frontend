@@ -1,18 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import { SignOptionType } from "@api/auth";
+import { checkIsLogin, SignOptionType } from "@api/auth";
 import SignForm from "@components/SignForm";
 import * as S from "@pages/Sign/Sign.style";
+import { pathName } from "@router";
 
 const Sign = () => {
+  const navigate = useNavigate();
   const { state: receivedMessage } = useLocation() as { state?: SignOptionType };
   const [signOption, setSignOption] = useState<SignOptionType>("signin");
+  const isLogin = checkIsLogin();
 
   const changeSignOption = () => {
     setSignOption(signOption === "signin" ? "signup" : "signin");
   };
+
+  useEffect(() => {
+    if (isLogin) navigate(pathName.todo);
+  }, []);
 
   return (
     <S.Wrapper>

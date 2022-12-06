@@ -1,4 +1,5 @@
 import { createGlobalStyle, css } from "styled-components";
+import "@styles/animations.css";
 
 const GlobalStyle = createGlobalStyle`
 	${() => css`
