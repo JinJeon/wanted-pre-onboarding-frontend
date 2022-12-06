@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { SignOptionType, sign } from "@api/auth";
 import Button from "@components/Button";
 import * as S from "@components/SignForm/SignForm.style";
-import { failToLogin, successToSignUp } from "@constants/sentences";
+import { failToLogin, failToSignUp, successToSignUp } from "@constants/sentences";
 import { CANCEL, EMAIL, PASSWORD, SIGNIN, SIGNUP } from "@constants/words";
 import { useDebounce } from "@hooks/useDebounce";
 import { pathName } from "@router";
@@ -65,7 +65,8 @@ const SignForm = ({ signOption, changeSignOption, receivedMessage }: SignFormPro
       navigateToOtherOption();
       setMessage(successToSignUp);
     } else if (errorMessage) {
-      setMessage(`${failToLogin}(${errorMessage})`);
+      const failMention = signOption === "signin" ? failToLogin : failToSignUp;
+      setMessage(`${failMention} (${errorMessage})`);
     }
   };
 
