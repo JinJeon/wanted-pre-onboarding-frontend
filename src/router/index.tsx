@@ -1,17 +1,19 @@
-import Login from "@pages/Login";
 import NotFound from "@pages/NotFound";
+import SignIn from "@pages/Sign";
 import Todo from "@pages/Todo";
 
-const pathName = {
-  login: "/",
+import ProtectedRoute from "./ProtectedRoute";
+
+export const pathName = {
+  signin: "/",
   todo: "todo",
   other: "/*",
 };
 
 export const routes = [
-  { path: pathName.login, element: <Login /> },
+  { path: pathName.signin, element: <SignIn /> },
   {
-    element: <Login />,
+    element: <ProtectedRoute />,
     children: [{ path: pathName.todo, element: <Todo /> }],
   },
   { path: pathName.other, element: <NotFound /> },
