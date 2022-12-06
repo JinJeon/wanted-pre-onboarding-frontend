@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, MouseEvent, useState } from "react";
+import { ChangeEvent, FormEvent, MouseEvent, useCallback, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -8,6 +8,7 @@ import * as S from "@components/SignForm/SignForm.style";
 import { CANCEL, EMAIL, PASSWORD, SIGNIN, SIGNUP } from "@constants/words";
 import { useDebounce } from "@hooks/useDebounce";
 import { pathName } from "@router";
+import { isEmailExp } from "@utils/regExp";
 
 type SignFormPropsType = {
   signOption: SignOptionType;
@@ -23,6 +24,11 @@ type OptionalTextsType = {
   };
 };
 
+type ChangeInfoParamsType = {
+  event: ChangeEvent<HTMLInputElement>;
+  target: "email" | "password";
+};
+
 const optionalTexts: OptionalTextsType = {
   signin: { title: "SIGN IN HERE", submitButtonText: SIGNIN, optionButtonText: SIGNUP },
   signup: {
@@ -36,11 +42,14 @@ const SignForm = ({ signOption, onClickOptionButton, receivedMessage }: SignForm
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(receivedMessage || "");
+  const [isSubmitPossible, setIsSubmitPossible] = useState(false);
   const navigate = useNavigate();
   const { title, submitButtonText, optionButtonText } = optionalTexts[signOption];
+  const showedPassword = "•".repeat(password.length);
 
-  const checkValues = async (event: FormEvent) => {
+  const checkSign = async (event: FormEvent) => {
     event.preventDefault();
+
     const { isSuccess, errorMessage } = await sign({ email, password, signOption });
     if (isSuccess) {
       navigate(pathName.todo);
@@ -49,37 +58,55 @@ const SignForm = ({ signOption, onClickOptionButton, receivedMessage }: SignForm
     }
   };
 
-  const changeEmail = (event: ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    setEmail(value);
+  const checkIsInfoCorrectFormat = () => {
+    const isEmailCorrectFormat = isEmailExp(email);
+    const isPasswordCorrectFormat = password.length >= 8;
+    if (isEmailCorrectFormat && isPasswordCorrectFormat) setIsSubmitPossible(true);
   };
 
-  const changePassword = (event: ChangeEvent<HTMLInputElement>) => {
+  const changeInfo = ({ event, target }: ChangeInfoParamsType) => {
+    setIsSubmitPossible(false);
     const { value } = event.target;
-    setPassword(value);
-  };
-
-  const handleClickOptionButton = (event?: MouseEvent<HTMLButtonElement>) => {
-    event && event.preventDefault();
-    setPassword("");
-    setEmail("");
-    onClickOptionButton();
+    const targetSetter = {
+      email: setEmail,
+      password: setPassword,
+    };
+    targetSetter[target](value);
   };
 
   const removeMessage = () => {
     if (!!message.length) setMessage("");
   };
 
+  const handleClickOptionButton = useCallback(
+    (event?: MouseEvent<HTMLButtonElement>) => {
+      event && event.preventDefault();
+      setPassword("");
+      setEmail("");
+      onClickOptionButton();
+    },
+    [signOption],
+  );
+
   useDebounce({ func: removeMessage, delay: 3000, deps: [message] });
+  useDebounce({ func: checkIsInfoCorrectFormat, delay: 500, deps: [email, password] });
 
   return (
-    <S.SignForm onSubmit={checkValues}>
+    <S.SignForm onSubmit={checkSign}>
       <S.Title>{title}</S.Title>
-      <S.Input placeholder={EMAIL} onChange={changeEmail} value={email} />
-      <S.Input placeholder={PASSWORD} onChange={changePassword} value={password} />
+      <S.Input
+        placeholder={EMAIL}
+        onChange={(event) => changeInfo({ event, target: "email" })}
+        value={email}
+      />
+      <S.Input
+        placeholder={PASSWORD}
+        onChange={(event) => changeInfo({ event, target: "password" })}
+        value={showedPassword}
+      />
       <S.ButtonsWrapper>
         <Button onClick={handleClickOptionButton} text={optionButtonText} color='blue' />
-        <Button text={submitButtonText} color='yellow' />
+        <Button text={submitButtonText} color='yellow' disabled={!isSubmitPossible} />
       </S.ButtonsWrapper>
       <S.ErrorMessage isError={!!message.length}>{message}</S.ErrorMessage>
     </S.SignForm>
