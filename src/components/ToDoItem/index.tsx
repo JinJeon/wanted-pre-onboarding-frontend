@@ -104,7 +104,7 @@ const ToDoItem = ({ todo, isCompleted, id, onDeleteSuccess }: ToDoItemPropsType)
             />
             <SecondButton
               onClick={!isEdited ? deleteThis : hideEditMode}
-              color={theme.colors.red}
+              color={theme.colors[isEdited ? "blue" : "red"]}
             />
           </>
         )}

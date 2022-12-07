@@ -34,6 +34,15 @@ const GlobalStyle = createGlobalStyle`
     input {
       font-weight: 600;
     }
+
+    button,
+    svg {
+      cursor: pointer;
+
+      :disabled {
+        cursor: not-allowed;
+      }
+    }
   `}`;
 
 export default GlobalStyle;

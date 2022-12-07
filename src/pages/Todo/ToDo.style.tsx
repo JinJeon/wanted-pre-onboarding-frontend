@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 
-import { flexCenter, noScrollBar } from "@styles/utils";
+import { noScrollBar } from "@styles/utils";
 
 export const Wrapper = styled.div`
   ${({ theme: { colors } }) => css`
@@ -17,10 +17,20 @@ export const Wrapper = styled.div`
   `}
 `;
 
-export const Title = styled.h2`
-  ${flexCenter};
-  font-size: 1.25rem;
+export const Header = styled.header`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   height: 3rem;
+  padding-bottom: 1rem;
+`;
+
+export const Title = styled.h2`
+  font-size: 1.25rem;
+`;
+
+export const ButtonIcon = styled.button`
+  width: 1.5rem;
 `;
 
 export const ListWrapper = styled.div`
