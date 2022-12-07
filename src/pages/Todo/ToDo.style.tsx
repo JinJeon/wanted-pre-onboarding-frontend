@@ -7,6 +7,7 @@ export const Wrapper = styled.div`
     background-color: ${colors.grey0};
     margin: auto;
     height: 80%;
+    max-height: 30rem;
     width: 80%;
     min-width: 20rem;
     max-width: 44rem;
@@ -31,4 +32,5 @@ export const ListWrapper = styled.div`
   width: 100%;
   overflow: scroll;
   height: inherit;
+  border-radius: 0.5rem;
 `;

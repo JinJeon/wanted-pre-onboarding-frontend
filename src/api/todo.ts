@@ -61,10 +61,14 @@ export const updatesTodo = async ({ id, todo, isCompleted }: UpdatesTodoParamsTy
 
 export const deleteTodo = async ({ id }: { id: number }) => {
   const client = useFetch({ address, isAuth: true, isContentType: true });
+  const result: FetchResultType<TodoDataType[]> = { isSuccess: false };
 
   try {
-    await client.delete(`:${id}`);
+    const { status } = await client.delete(`${id}`);
+    if (status === 204) result.isSuccess = true;
   } catch (error) {
-    return checkError(error);
+    result.errorMessage = checkError(error);
   }
+
+  return result;
 };

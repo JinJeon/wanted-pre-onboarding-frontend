@@ -18,7 +18,9 @@ const ToDo = () => {
     }
   };
 
-  const toDoList = toDoData.map((info) => <ToDoItem key={info.id} {...info} />);
+  const toDoList = toDoData
+    .map((info) => <ToDoItem key={info.id} onDeleteSuccess={getToDoData} {...info} />)
+    .reverse();
 
   useEffect(() => {
     getToDoData();

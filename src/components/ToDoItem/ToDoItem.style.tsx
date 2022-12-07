@@ -1,5 +1,6 @@
 import styled, { css } from "styled-components";
 
+import { TodoDataType } from "@api/todo";
 import { flexBetween, noScrollBar, standardHeight } from "@styles/utils";
 
 export const Wrapper = styled.div`
@@ -15,10 +16,17 @@ export const Wrapper = styled.div`
   `}
 `;
 
-export const ToDoWrapper = styled.div`
+export const ToDoWrapper = styled.div<Pick<TodoDataType, "isCompleted">>`
   ${noScrollBar};
-  word-break: keep-all;
-  overflow: scroll;
+  overflow-x: scroll;
+  white-space: nowrap;
+
+  ${({ theme: { colors }, isCompleted }) =>
+    isCompleted &&
+    css`
+      color: ${colors.grey1};
+      text-decoration: line-through;
+    `}
 `;
 
 export const ButtonsWrapper = styled.div`
