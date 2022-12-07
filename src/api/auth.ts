@@ -23,15 +23,15 @@ type FetchResultType<T> = {
 export const sign = async ({ email, password, signOption }: SingParamsType) => {
   const address = apiAddress.auth[signOption];
   const client = useFetch({ address, isContentType: true });
-  const result: FetchResultType<SignSuccessDataType> = { isSuccess: true };
+  const result: FetchResultType<SignSuccessDataType> = { isSuccess: false };
 
   try {
     const { data } = await client.post<SignSuccessDataType>("", { email, password });
     const accessToken = data[ACCESS_TOKEN];
     setLocalStorageInfo({ key: ACCESS_TOKEN, info: accessToken });
     result.data = data;
+    result.isSuccess = true;
   } catch (error) {
-    result.isSuccess = false;
     result.errorMessage = checkError(error);
   }
 

@@ -1,5 +1,7 @@
 import { createGlobalStyle, css } from "styled-components";
+
 import "@styles/animations.css";
+import { flexCenter } from "./utils";
 
 const GlobalStyle = createGlobalStyle`
 	${() => css`
@@ -24,7 +26,8 @@ const GlobalStyle = createGlobalStyle`
     .App {
       padding: 1rem;
       height: 100vh;
-      font-weight: 600;
+      font-weight: 700;
+      ${flexCenter};
     }
 
     button,

@@ -1,6 +1,6 @@
 import NotFound from "@pages/NotFound";
 import SignIn from "@pages/Sign";
-import Todo from "@pages/Todo";
+import Todo from "@pages/ToDo";
 
 import ProtectedRoute from "./ProtectedRoute";
 

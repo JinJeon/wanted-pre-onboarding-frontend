@@ -1,7 +1,7 @@
 import { apiAddress } from "@constants/api";
 import { checkError, useFetch } from "@utils/api";
 
-type TodoDataType = {
+export type TodoDataType = {
   id: number;
   todo: string;
   isCompleted: boolean;
@@ -10,28 +10,42 @@ type TodoDataType = {
 
 type UpdatesTodoParamsType = Omit<TodoDataType, "userId">;
 
+type FetchResultType<T> = {
+  isSuccess: boolean;
+  data?: T;
+  errorMessage?: string;
+};
+
 const address = apiAddress.todo;
 
 export const createTodo = async ({ todo }: { todo: string }) => {
   const client = useFetch({ address, isContentType: true, isAuth: true });
+  const result: FetchResultType<TodoDataType> = { isSuccess: false };
 
   try {
     const { data } = await client.post<TodoDataType>("", { todo });
-    return data;
+    result.isSuccess = true;
+    result.data = data;
   } catch (error) {
-    return checkError(error);
+    result.errorMessage = checkError(error);
   }
+
+  return result;
 };
 
 export const getTodos = async () => {
   const client = useFetch({ address, isAuth: true });
+  const result: FetchResultType<TodoDataType[]> = { isSuccess: false };
 
   try {
     const { data } = await client.get<TodoDataType[]>("");
-    return data;
+    result.isSuccess = true;
+    result.data = data;
   } catch (error) {
-    return checkError(error);
+    result.errorMessage = checkError(error);
   }
+
+  return result;
 };
 
 export const updatesTodo = async ({ id, todo, isCompleted }: UpdatesTodoParamsType) => {

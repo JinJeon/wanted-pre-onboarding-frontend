@@ -1,8 +1,6 @@
 import styled, { css } from "styled-components";
 
-import { flexCenter } from "@styles/utils";
-
-const commonHeight = "2rem";
+import { flexCenter, standardHeight } from "@styles/utils";
 
 export const SignForm = styled.form`
   ${({ theme: { colors } }) => css`
@@ -27,7 +25,7 @@ export const Input = styled.input`
   border-radius: 0.5rem;
   padding: 0.25rem;
   width: 100%;
-  height: ${commonHeight};
+  height: ${standardHeight};
   border: transparent;
 
   &:focus {
@@ -49,7 +47,7 @@ export const SubmitButton = styled.button`
   ${({ theme: { colors } }) => css`
     background-color: ${colors.yellow};
     width: 100%;
-    height: ${commonHeight};
+    height: ${standardHeight};
     border-radius: 0.5rem;
     opacity: 0.8;
 
@@ -68,7 +66,7 @@ export const OptionButton = styled.button`
   ${({ theme: { colors } }) => css`
     background-color: ${colors.blue};
     width: 100%;
-    height: ${commonHeight};
+    height: ${standardHeight};
     border-radius: 0.5rem;
     opacity: 0.8;
 
@@ -86,7 +84,7 @@ export const OptionButton = styled.button`
 export const ErrorMessage = styled.div<{ isError: boolean }>`
   ${({ theme: { colors }, isError }) => css`
     background-color: ${colors.red};
-    min-height: ${commonHeight};
+    min-height: ${standardHeight};
     line-height: 1.5rem;
     border-radius: 0.5rem;
     width: 100%;
