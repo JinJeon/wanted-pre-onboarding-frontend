@@ -10,7 +10,7 @@ export const SignForm = styled.form`
     gap: 0.75rem;
     background-color: ${colors.grey0};
     width: 20rem;
-    height: 20rem;
+    min-height: 20rem;
     border-radius: 1.5rem;
   `}
 `;

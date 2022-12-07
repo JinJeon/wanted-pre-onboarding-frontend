@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, MouseEvent, useCallback, useState } from "react";
+import { FormEvent, MouseEvent, useCallback, useEffect, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -6,8 +6,9 @@ import { SignOptionType, sign } from "@api/auth";
 import Button from "@components/Button";
 import * as S from "@components/SignForm/SignForm.style";
 import { failToLogin, failToSignUp, successToSignUp } from "@constants/sentences";
-import { CANCEL, EMAIL, PASSWORD, SIGNIN, SIGNUP } from "@constants/words";
+import { CANCEL, EMAIL, PASSWORD, PASSWORDCHECK, SIGNIN, SIGNUP } from "@constants/words";
 import { useDebounce } from "@hooks/useDebounce";
+import useInput from "@hooks/useInput";
 import { pathName } from "@router";
 import { isEmailExp } from "@utils/regExp";
 
@@ -25,11 +26,6 @@ type OptionalTextsType = {
   };
 };
 
-type ChangeInfoParamsType = {
-  event: ChangeEvent<HTMLInputElement>;
-  target: "email" | "password";
-};
-
 const optionalTexts: OptionalTextsType = {
   signin: { title: "SIGN IN HERE", submitButtonText: SIGNIN, optionButtonText: SIGNUP },
   signup: {
@@ -40,15 +36,26 @@ const optionalTexts: OptionalTextsType = {
 };
 
 const SignForm = ({ signOption, changeSignOption, receivedMessage }: SignFormPropsType) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { inputValue: email, setInputValue: setEmail, onChange: onChangeEmail } = useInput("");
+  const {
+    inputValue: password,
+    setInputValue: setPassword,
+    onChange: onChangePassword,
+  } = useInput("");
+  const {
+    inputValue: passwordCheck,
+    setInputValue: setPasswordCheck,
+    onChange: onChangePasswordCheck,
+  } = useInput("");
   const [message, setMessage] = useState(receivedMessage || "");
   const [isSubmitPossible, setIsSubmitPossible] = useState(false);
   const navigate = useNavigate();
   const { title, submitButtonText, optionButtonText } = optionalTexts[signOption];
   const showedPassword = "•".repeat(password.length);
+  const showedPasswordCheck = "•".repeat(passwordCheck.length);
 
   const navigateToOtherOption = () => {
+    setPasswordCheck("");
     setPassword("");
     setEmail("");
     changeSignOption();
@@ -56,9 +63,9 @@ const SignForm = ({ signOption, changeSignOption, receivedMessage }: SignFormPro
 
   const checkSign = async (event: FormEvent) => {
     event.preventDefault();
+    if (!isSubmitPossible) return;
 
     const { isSuccess, errorMessage } = await sign({ email, password, signOption });
-
     if (isSuccess && signOption === "signin") {
       navigate(pathName.todo);
     } else if (isSuccess && signOption === "signup") {
@@ -73,17 +80,22 @@ const SignForm = ({ signOption, changeSignOption, receivedMessage }: SignFormPro
   const checkIsInfoCorrectFormat = () => {
     const isEmailCorrectFormat = isEmailExp(email);
     const isPasswordCorrectFormat = password.length >= 8;
-    if (isEmailCorrectFormat && isPasswordCorrectFormat) setIsSubmitPossible(true);
-  };
+    const isSamePassword = signOption === "signin" || password === passwordCheck;
+    let newMessage;
 
-  const changeInfo = ({ event, target }: ChangeInfoParamsType) => {
-    setIsSubmitPossible(false);
-    const { value } = event.target;
-    const targetSetter = {
-      email: setEmail,
-      password: setPassword,
-    };
-    targetSetter[target](value);
+    if (!isEmailCorrectFormat) {
+      newMessage = "잘못된 이메일 형식입니다.";
+    } else if (!isPasswordCorrectFormat) {
+      newMessage = "비밀번호는 8자리 이상이여야 합니다.";
+    } else if (!isSamePassword) {
+      newMessage = "비밀번호가 일치하지 않습니다.";
+    }
+
+    if (newMessage) {
+      setMessage(newMessage);
+    } else {
+      setIsSubmitPossible(true);
+    }
   };
 
   const removeMessage = () => {
@@ -98,22 +110,25 @@ const SignForm = ({ signOption, changeSignOption, receivedMessage }: SignFormPro
     [signOption],
   );
 
+  useEffect(() => {
+    setIsSubmitPossible(false);
+  }, [email, password, passwordCheck]);
+
   useDebounce({ func: removeMessage, delay: 3000, deps: [message] });
   useDebounce({ func: checkIsInfoCorrectFormat, delay: 500, deps: [email, password] });
 
   return (
     <S.SignForm onSubmit={checkSign}>
       <S.Title>{title}</S.Title>
-      <S.Input
-        placeholder={EMAIL}
-        onChange={(event) => changeInfo({ event, target: "email" })}
-        value={email}
-      />
-      <S.Input
-        placeholder={PASSWORD}
-        onChange={(event) => changeInfo({ event, target: "password" })}
-        value={showedPassword}
-      />
+      <S.Input placeholder={EMAIL} onChange={onChangeEmail} value={email} />
+      <S.Input placeholder={PASSWORD} onChange={onChangePassword} value={showedPassword} />
+      {signOption === "signup" && (
+        <S.Input
+          placeholder={PASSWORDCHECK}
+          onChange={onChangePasswordCheck}
+          value={showedPasswordCheck}
+        />
+      )}
       <S.ButtonsWrapper>
         <Button text={submitButtonText} color='yellow' disabled={!isSubmitPossible} />
         <Button onClick={handleClickOptionButton} text={optionButtonText} color='blue' />

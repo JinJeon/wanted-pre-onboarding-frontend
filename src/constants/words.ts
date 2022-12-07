@@ -8,4 +8,5 @@ export const SIGNUP = "SIGN UP";
 export const SIGNIN = "SIGN IN";
 export const EMAIL = "EMAIL";
 export const PASSWORD = "PASSWORD";
+export const PASSWORDCHECK = "PASSWORD CHECK";
 export const TODOLIST = "TO DO LIST";
