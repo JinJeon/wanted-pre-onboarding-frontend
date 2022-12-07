@@ -17,6 +17,7 @@ export const Wrapper = styled.form`
 export const Input = styled.input`
   border: transparent;
   width: 100%;
+  font-size: 1rem;
 
   &:focus {
     outline: none;

@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 
-import { flexCenter, standardHeight } from "@styles/utils";
+import { flexCenter, noScrollBar } from "@styles/utils";
 
 export const Wrapper = styled.div`
   ${({ theme: { colors } }) => css`
@@ -9,9 +9,10 @@ export const Wrapper = styled.div`
     height: 80%;
     width: 80%;
     min-width: 20rem;
-    max-width: 40rem;
+    max-width: 44rem;
     border-radius: 1.5rem;
     padding: 1rem;
+    overflow: hidden;
   `}
 `;
 
@@ -22,33 +23,12 @@ export const Title = styled.h2`
 `;
 
 export const ListWrapper = styled.div`
+  ${noScrollBar};
+  margin-top: 1rem;
   display: flex;
-`;
-
-export const ToDoForm = styled.form`
-  ${flexCenter};
-  ${({ theme: { colors } }) => css`
-    background-color: ${colors.white};
-    gap: 0.25rem;
-    height: ${standardHeight};
-    width: 100%;
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-  `}
-`;
-
-export const Input = styled.input`
-  border: transparent;
+  flex-direction: column;
+  gap: 0.5rem;
   width: 100%;
-
-  &:focus {
-    outline: none;
-    ::placeholder {
-      color: transparent;
-    }
-  }
-`;
-
-export const SubmitButton = styled.button`
-  ${flexCenter}
+  overflow: scroll;
+  height: inherit;
 `;

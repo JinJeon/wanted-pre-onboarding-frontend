@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { getTodos, TodoDataType } from "@api/todo";
 import ToDoForm from "@components/ToDoForm";
+import ToDoItem from "@components/ToDoItem";
 import * as S from "@pages/ToDo/ToDo.style";
 
 const ToDo = () => {
@@ -17,8 +18,7 @@ const ToDo = () => {
     }
   };
 
-  // const toDoList = toDoData.map(({ id, todo, isCompleted, userId }) => {});
-  console.log(toDoData);
+  const toDoList = toDoData.map((info) => <ToDoItem key={info.id} {...info} />);
 
   useEffect(() => {
     getToDoData();
@@ -27,7 +27,8 @@ const ToDo = () => {
   return (
     <S.Wrapper>
       <S.Title>TO DO LIST</S.Title>
-      <ToDoForm />
+      <ToDoForm onSubmitSuccess={getToDoData} />
+      <S.ListWrapper>{toDoList}</S.ListWrapper>
     </S.Wrapper>
   );
 };

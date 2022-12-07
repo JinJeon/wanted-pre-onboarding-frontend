@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 
-import { flexCenter, standardHeight } from "@styles/utils";
+import { flexBetween, flexCenter, standardHeight } from "@styles/utils";
 
 export const SignForm = styled.form`
   ${({ theme: { colors } }) => css`
@@ -37,8 +37,7 @@ export const Input = styled.input`
 `;
 
 export const ButtonsWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
+  ${flexBetween};
   width: 100%;
   gap: 0.75rem;
 `;

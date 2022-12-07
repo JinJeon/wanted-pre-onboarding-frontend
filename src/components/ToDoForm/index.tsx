@@ -6,16 +6,26 @@ import { createTodo } from "@api/todo";
 import * as S from "@components/ToDoForm/ToDoForm.style";
 import useInput from "@hooks/useInput";
 
-const ToDoForm = () => {
+type ToDoFormPropsType = {
+  onSubmitSuccess: () => void;
+};
+
+const ToDoForm = ({ onSubmitSuccess }: ToDoFormPropsType) => {
   const {
     inputValue: newToDo,
-    // setInputValue: setNewToDo,
+    setInputValue: setNewToDo,
     onChange: onChangeNewToDo,
   } = useInput("");
 
   const submitToDo = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const { data, isSuccess, errorMessage } = await createTodo({ todo: newToDo });
+    if (isSuccess && data) {
+      onSubmitSuccess();
+      setNewToDo("");
+    } else if (!isSuccess && errorMessage) {
+      // show that error occurs
+    }
   };
 
   return (
