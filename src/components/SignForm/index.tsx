@@ -4,8 +4,16 @@ import { useNavigate } from "react-router-dom";
 
 import { SignOptionType, sign } from "@api/auth";
 import Button from "@components/Button";
+import useErrorMessage from "@components/ErroMessage";
 import * as S from "@components/SignForm/SignForm.style";
-import { failToLogin, failToSignUp, successToSignUp } from "@constants/sentences";
+import {
+  failToLogin,
+  failToSignUp,
+  incorrectEmailFormat,
+  incorrectPassword,
+  incorrectPasswordLength,
+  successToSignUp,
+} from "@constants/sentences";
 import { CANCEL, EMAIL, PASSWORD, PASSWORDCHECK, SIGNIN, SIGNUP } from "@constants/words";
 import { useDebounce } from "@hooks/useDebounce";
 import useInput from "@hooks/useInput";
@@ -47,12 +55,12 @@ const SignForm = ({ signOption, changeSignOption, receivedMessage }: SignFormPro
     setInputValue: setPasswordCheck,
     onChange: onChangePasswordCheck,
   } = useInput("");
-  const [message, setMessage] = useState(receivedMessage || "");
   const [isSubmitPossible, setIsSubmitPossible] = useState(false);
   const navigate = useNavigate();
-  const { title, submitButtonText, optionButtonText } = optionalTexts[signOption];
   const showedPassword = "•".repeat(password.length);
   const showedPasswordCheck = "•".repeat(passwordCheck.length);
+  const { title, submitButtonText, optionButtonText } = optionalTexts[signOption];
+  const { setMessage, ErrorMessage } = useErrorMessage({ receivedMessage, disapperTime: 2000 });
 
   const navigateToOtherOption = () => {
     setPasswordCheck("");
@@ -84,11 +92,11 @@ const SignForm = ({ signOption, changeSignOption, receivedMessage }: SignFormPro
     let newMessage;
 
     if (!isEmailCorrectFormat) {
-      newMessage = "잘못된 이메일 형식입니다.";
+      newMessage = incorrectEmailFormat;
     } else if (!isPasswordCorrectFormat) {
-      newMessage = "비밀번호는 8자리 이상이여야 합니다.";
+      newMessage = incorrectPasswordLength;
     } else if (!isSamePassword) {
-      newMessage = "비밀번호가 일치하지 않습니다.";
+      newMessage = incorrectPassword;
     }
 
     if (newMessage) {
@@ -96,10 +104,6 @@ const SignForm = ({ signOption, changeSignOption, receivedMessage }: SignFormPro
     } else {
       setIsSubmitPossible(true);
     }
-  };
-
-  const removeMessage = () => {
-    if (!!message.length) setMessage("");
   };
 
   const handleClickOptionButton = useCallback(
@@ -114,7 +118,6 @@ const SignForm = ({ signOption, changeSignOption, receivedMessage }: SignFormPro
     setIsSubmitPossible(false);
   }, [email, password, passwordCheck]);
 
-  useDebounce({ func: removeMessage, delay: 3000, deps: [message] });
   useDebounce({ func: checkIsInfoCorrectFormat, delay: 500, deps: [email, password] });
 
   return (
@@ -133,7 +136,7 @@ const SignForm = ({ signOption, changeSignOption, receivedMessage }: SignFormPro
         <Button text={submitButtonText} color='yellow' disabled={!isSubmitPossible} />
         <Button onClick={handleClickOptionButton} text={optionButtonText} color='blue' />
       </S.ButtonsWrapper>
-      <S.ErrorMessage isError={!!message.length}>{message}</S.ErrorMessage>
+      <ErrorMessage />
     </S.SignForm>
   );
 };

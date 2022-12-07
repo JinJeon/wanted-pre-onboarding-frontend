@@ -32,6 +32,7 @@ export const ToDoTextWrapper = styled.div`
 export const ToDoText = styled.div<Pick<TodoDataType, "isCompleted">>`
   ${noScrollBar};
   display: flex;
+  font-size: 0.8rem;
   align-items: center;
   overflow-x: scroll;
   white-space: nowrap;
@@ -74,7 +75,7 @@ export const CheckBox = styled.input`
 export const Input = styled.input`
   border: transparent;
   padding: 0;
-  font-size: 1rem;
+  font-size: 0.8rem;
   width: 100%;
 
   &:focus {

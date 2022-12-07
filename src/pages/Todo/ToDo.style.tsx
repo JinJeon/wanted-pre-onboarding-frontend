@@ -26,7 +26,7 @@ export const Header = styled.header`
 `;
 
 export const Title = styled.h2`
-  font-size: 1.25rem;
+  font-size: 1.2rem;
 `;
 
 export const ButtonIcon = styled.button`

@@ -4,3 +4,6 @@ export const failToSignUp = "회원가입에 실패했습니다.";
 export const successToSignUp = "회원가입에 성공하였습니다.";
 export const useAfterLogin = "로그인 후 이용하십시오";
 export const writeWhatToDo = "WRITE WHAT TO DO";
+export const incorrectEmailFormat = "잘못된 이메일 형식입니다.";
+export const incorrectPassword = "비밀번호가 일치하지 않습니다.";
+export const incorrectPasswordLength = "비밀번호는 8자리 이상이여야 합니다.";
