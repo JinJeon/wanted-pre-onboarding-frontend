@@ -13,9 +13,10 @@ import theme from "@styles/theme";
 
 type ToDoItemPropsType = TodoDataType & {
   onDeleteSuccess: () => void;
+  onErrorOccurs: (errorMessage: string) => void;
 };
 
-const ToDoItem = ({ todo, isCompleted, id, onDeleteSuccess }: ToDoItemPropsType) => {
+const ToDoItem = ({ todo, isCompleted, id, onDeleteSuccess, onErrorOccurs }: ToDoItemPropsType) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isEdited, setIsEdited] = useState(false);
   const [isChecked, setIsChecked] = useState(isCompleted);
@@ -49,7 +50,7 @@ const ToDoItem = ({ todo, isCompleted, id, onDeleteSuccess }: ToDoItemPropsType)
     if (isSuccess && data) {
       setIsEdited(false);
     } else if (!isSuccess && errorMessage) {
-      // show that error occurs
+      onErrorOccurs(errorMessage);
     }
   };
 
@@ -60,6 +61,7 @@ const ToDoItem = ({ todo, isCompleted, id, onDeleteSuccess }: ToDoItemPropsType)
       onDeleteSuccess();
     } else if (!isSuccess && errorMessage) {
       setIsLoading(false);
+      onErrorOccurs(errorMessage);
     }
   };
 
@@ -73,7 +75,7 @@ const ToDoItem = ({ todo, isCompleted, id, onDeleteSuccess }: ToDoItemPropsType)
     if (isSuccess && data) {
       setIsChecked(!isChecked);
     } else if (!isSuccess && errorMessage) {
-      // show that error occurs
+      onErrorOccurs(errorMessage);
     }
   };
 

@@ -3,19 +3,31 @@ import styled, { css } from "styled-components";
 import { noScrollBar } from "@styles/utils";
 
 export const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 30rem;
+  height: 100%;
+  min-width: 20rem;
+  max-width: 44rem;
+  width: 80%;
+  margin: 0 auto;
+`;
+
+export const ToDoWrapper = styled.div`
   ${({ theme: { colors } }) => css`
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
     background-color: ${colors.grey0};
-    margin: auto;
-    height: 80%;
-    max-height: 30rem;
-    width: 80%;
-    min-width: 20rem;
-    max-width: 44rem;
     border-radius: 1.5rem;
     padding: 1rem;
+    height: 25rem;
     overflow: hidden;
   `}
 `;
+
+export const ErrorMessageWrapper = styled.div``;
 
 export const Header = styled.header`
   display: flex;
@@ -41,6 +53,5 @@ export const ListWrapper = styled.div`
   gap: 0.5rem;
   width: 100%;
   overflow: scroll;
-  height: inherit;
   border-radius: 0.5rem;
 `;
