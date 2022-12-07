@@ -3,3 +3,4 @@ export const failToLogin = "로그인에 실패했습니다.";
 export const failToSignUp = "회원가입에 실패했습니다.";
 export const successToSignUp = "회원가입에 성공하였습니다.";
 export const useAfterLogin = "로그인 후 이용하십시오";
+export const writeWhatToDo = "WRITE WHAT TO DO";

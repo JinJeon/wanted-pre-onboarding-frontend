@@ -1,14 +1,17 @@
 import { FormEvent } from "react";
 
-import { FaPlus } from "react-icons/fa";
+import { FaPlus as AddIcon } from "react-icons/fa";
 
 import { createTodo } from "@api/todo";
 import * as S from "@components/ToDoForm/ToDoForm.style";
+import { writeWhatToDo } from "@constants/sentences";
 import useInput from "@hooks/useInput";
 
 type ToDoFormPropsType = {
   onSubmitSuccess: () => void;
 };
+
+const toDoMaxLength = 50;
 
 const ToDoForm = ({ onSubmitSuccess }: ToDoFormPropsType) => {
   const {
@@ -30,9 +33,15 @@ const ToDoForm = ({ onSubmitSuccess }: ToDoFormPropsType) => {
 
   return (
     <S.Wrapper onSubmit={submitToDo}>
-      <S.Input value={newToDo} onChange={onChangeNewToDo} />
+      <S.Input
+        placeholder={writeWhatToDo}
+        value={newToDo}
+        onChange={onChangeNewToDo}
+        spellCheck={false}
+        maxLength={toDoMaxLength}
+      />
       <S.SubmitButton disabled={!newToDo.length}>
-        <FaPlus size={12.5} />
+        <AddIcon size={12.5} />
       </S.SubmitButton>
     </S.Wrapper>
   );
