@@ -45,7 +45,7 @@ const Todo = () => {
   return (
     <S.Wrapper>
       <S.ErrorMessageWrapper>
-        <ErrorMessage disapperTime={500} />
+        <ErrorMessage disapperTime={2000} />
       </S.ErrorMessageWrapper>
       <S.ToDoWrapper>
         <S.Header>
