@@ -1,15 +1,16 @@
-import { useCallback, useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 
 import { FiLogOut as LogoutIcon } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
 import { getTodos } from "@api/todo";
-import useErrorMessage from "@components/ErroMessage";
+import ErrorMessage from "@components/ErroMessage";
 import ToDoForm from "@components/ToDoForm";
 import ToDoItem from "@components/ToDoItem";
 import { TODOLIST } from "@constants/words";
 import * as S from "@pages/Todo/Todo.style";
 import { pathName } from "@router";
+import { SetErrorMessageContext } from "@store/errorMessage";
 import { TodoContext, TodoDispatchContext } from "@store/todo";
 import { removeLocalStorageInfo } from "@utils/localStorage";
 
@@ -18,7 +19,7 @@ const Todo = () => {
   const dispatchTodoDataMap = useContext(TodoDispatchContext);
   const toDoData = [...toDoDataMap.values()];
   const navigate = useNavigate();
-  const { setMessage, ErrorMessage } = useErrorMessage({});
+  const setErrorMessage = useContext(SetErrorMessageContext);
 
   const getToDoData = async () => {
     const { data, isSuccess, errorMessage } = await getTodos();
@@ -26,22 +27,16 @@ const Todo = () => {
     if (isSuccess && data) {
       dispatchTodoDataMap({ type: "GET", value: data });
     } else if (!isSuccess && errorMessage) {
-      setMessage(errorMessage);
+      setErrorMessage(errorMessage);
     }
   };
-
-  const showErrorMessage = useCallback((errorMessage: string) => {
-    setMessage(errorMessage);
-  }, []);
 
   const logout = () => {
     removeLocalStorageInfo({ key: "access_token" });
     navigate(pathName.signin);
   };
 
-  const toDoList = toDoData
-    .map((info) => <ToDoItem key={info.id} onErrorOccurs={showErrorMessage} {...info} />)
-    .reverse();
+  const toDoList = toDoData.map((info) => <ToDoItem key={info.id} {...info} />).reverse();
 
   useEffect(() => {
     getToDoData();
@@ -50,7 +45,7 @@ const Todo = () => {
   return (
     <S.Wrapper>
       <S.ErrorMessageWrapper>
-        <ErrorMessage />
+        <ErrorMessage disapperTime={500} />
       </S.ErrorMessageWrapper>
       <S.ToDoWrapper>
         <S.Header>

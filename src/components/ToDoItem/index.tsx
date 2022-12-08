@@ -9,19 +9,19 @@ import { deleteTodo, TodoDataType, updatesTodo } from "@api/todo";
 import Loading from "@components/Loading";
 import * as S from "@components/ToDoItem/ToDoItem.style";
 import useInput from "@hooks/useInput";
+import { SetErrorMessageContext } from "@store/errorMessage";
 import { TodoDispatchContext } from "@store/todo";
 import theme from "@styles/theme";
 
-type ToDoItemPropsType = TodoDataType & {
-  onErrorOccurs: (errorMessage: string) => void;
-};
+type ToDoItemPropsType = TodoDataType;
 
-const ToDoItem = ({ todo, isCompleted, id, onErrorOccurs, userId }: ToDoItemPropsType) => {
+const ToDoItem = ({ todo, isCompleted, id, userId }: ToDoItemPropsType) => {
   const todoDataMapDispatch = useContext(TodoDispatchContext);
   const [isLoading, setIsLoading] = useState(false);
   const [isEdited, setIsEdited] = useState(false);
   const [isChecked, setIsChecked] = useState(isCompleted);
   const [prevToDo, setPrevToDo] = useState(todo);
+  const setErrorMessage = useContext(SetErrorMessageContext);
   const { inputValue: newToDo, onChange: onChangeToDo, setInputValue: setNewToDo } = useInput(todo);
   const FirstButton = !isEdited ? EditIcon : FinishEditIcon;
   const SecondButton = !isEdited ? TrashIcon : QuitEditIcon;
@@ -49,13 +49,13 @@ const ToDoItem = ({ todo, isCompleted, id, onErrorOccurs, userId }: ToDoItemProp
       type === "editor" && setIsEdited(false);
       type === "checkbox" && setIsChecked(!isChecked);
     } else if (!isSuccess && errorMessage) {
-      onErrorOccurs(errorMessage);
+      setErrorMessage(errorMessage);
     }
   };
 
   const finishEditItem = () => {
     if (!newToDo.length) {
-      onErrorOccurs("최소 한 글자 이상 입력해야합니다.");
+      setErrorMessage("최소 한 글자 이상 입력해야합니다.");
     } else {
       changeItemInfo("editor");
     }
@@ -68,7 +68,7 @@ const ToDoItem = ({ todo, isCompleted, id, onErrorOccurs, userId }: ToDoItemProp
       todoDataMapDispatch({ type: "DELETE", value: itemInfo });
     } else if (!isSuccess && errorMessage) {
       setIsLoading(false);
-      onErrorOccurs(errorMessage);
+      setErrorMessage(errorMessage);
     }
   };
 

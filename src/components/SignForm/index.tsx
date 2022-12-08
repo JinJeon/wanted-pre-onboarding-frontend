@@ -1,10 +1,10 @@
-import { FormEvent, MouseEvent, useCallback, useEffect, useState } from "react";
+import { FormEvent, MouseEvent, useCallback, useContext, useEffect, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 
 import { SignOptionType, sign } from "@api/auth";
 import Button from "@components/Button";
-import useErrorMessage from "@components/ErroMessage";
+import ErrorMessage from "@components/ErroMessage";
 import * as S from "@components/SignForm/SignForm.style";
 import {
   failToLogin,
@@ -18,6 +18,7 @@ import { CANCEL, EMAIL, PASSWORD, PASSWORDCHECK, SIGNIN, SIGNUP } from "@constan
 import { useDebounce } from "@hooks/useDebounce";
 import useInput from "@hooks/useInput";
 import { pathName } from "@router";
+import { SetErrorMessageContext } from "@store/errorMessage";
 import { isEmailExp } from "@utils/regExp";
 
 type SignFormPropsType = {
@@ -60,7 +61,7 @@ const SignForm = ({ signOption, changeSignOption, receivedMessage }: SignFormPro
   const showedPassword = "•".repeat(password.length);
   const showedPasswordCheck = "•".repeat(passwordCheck.length);
   const { title, submitButtonText, optionButtonText } = optionalTexts[signOption];
-  const { setMessage, ErrorMessage } = useErrorMessage({ receivedMessage, disapperTime: 2000 });
+  const setErrorMessage = useContext(SetErrorMessageContext);
 
   const navigateToOtherOption = () => {
     setPasswordCheck("");
@@ -78,10 +79,10 @@ const SignForm = ({ signOption, changeSignOption, receivedMessage }: SignFormPro
       navigate(pathName.todo);
     } else if (isSuccess && signOption === "signup") {
       navigateToOtherOption();
-      setMessage(successToSignUp);
+      setErrorMessage(successToSignUp);
     } else if (errorMessage) {
       const failMention = signOption === "signin" ? failToLogin : failToSignUp;
-      setMessage(`${failMention} (${errorMessage})`);
+      setErrorMessage(`${failMention} (${errorMessage})`);
     }
   };
 
@@ -100,7 +101,7 @@ const SignForm = ({ signOption, changeSignOption, receivedMessage }: SignFormPro
     }
 
     if (newMessage) {
-      setMessage(newMessage);
+      setErrorMessage(newMessage);
     } else {
       setIsSubmitPossible(true);
     }
@@ -136,7 +137,7 @@ const SignForm = ({ signOption, changeSignOption, receivedMessage }: SignFormPro
         <Button text={submitButtonText} color='yellow' disabled={!isSubmitPossible} />
         <Button onClick={handleClickOptionButton} text={optionButtonText} color='blue' />
       </S.ButtonsWrapper>
-      <ErrorMessage />
+      <ErrorMessage receivedMessage={receivedMessage} disapperTime={2000} />
     </S.SignForm>
   );
 };

@@ -20,6 +20,7 @@ const ToDoForm = () => {
 
   const submitToDo = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     const { data, isSuccess, errorMessage } = await createTodo({ todo: newToDo });
     if (isSuccess && data) {
       todoDataMapDispatch({ type: "CREATE", value: data });

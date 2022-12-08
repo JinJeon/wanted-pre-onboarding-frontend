@@ -1,27 +1,29 @@
-import { useState } from "react";
+import { useContext, useEffect } from "react";
 
 import * as S from "@components/ErroMessage/ErroMessage.style";
 import { useDebounce } from "@hooks/useDebounce";
+import { ErrorMessageContext, SetErrorMessageContext } from "@store/errorMessage";
 
 type ErrorMessagePropsType = {
   receivedMessage?: string;
   disapperTime?: number; //ms
 };
 
-const useErrorMessage = ({ receivedMessage, disapperTime = 3000 }: ErrorMessagePropsType) => {
-  const [message, setMessage] = useState(receivedMessage || "");
+const ErrorMessage = ({ receivedMessage, disapperTime = 3000 }: ErrorMessagePropsType) => {
+  const { message, trigger } = useContext(ErrorMessageContext);
+  const setErrorMessage = useContext(SetErrorMessageContext);
 
   const removeMessage = () => {
-    if (!!message.length) setMessage("");
+    if (!!message.length) setErrorMessage("");
   };
 
-  const ErrorMessage = () => {
-    useDebounce({ func: removeMessage, delay: disapperTime, deps: [message] });
+  useDebounce({ func: removeMessage, delay: disapperTime, deps: [trigger] });
 
-    return <S.Wrapper isError={!!message.length}>{message}</S.Wrapper>;
-  };
+  useEffect(() => {
+    if (receivedMessage) setErrorMessage(receivedMessage);
+  }, []);
 
-  return { message, setMessage, receivedMessage, ErrorMessage };
+  return <S.Wrapper isError={!!message.length}>{message}</S.Wrapper>;
 };
 
-export default useErrorMessage;
+export default ErrorMessage;
