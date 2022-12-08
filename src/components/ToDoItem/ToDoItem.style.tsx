@@ -37,6 +37,7 @@ export const ToDoText = styled.div<Pick<TodoDataType, "isCompleted">>`
   overflow-x: scroll;
   white-space: nowrap;
   height: 100%;
+  transition: all 0.25s;
 
   ${({ theme: { colors }, isCompleted }) =>
     isCompleted &&

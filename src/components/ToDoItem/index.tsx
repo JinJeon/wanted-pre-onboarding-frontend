@@ -37,13 +37,7 @@ const ToDoItem = ({ todo, isCompleted, id, onErrorOccurs, userId }: ToDoItemProp
     setIsEdited(false);
   };
 
-  const finishEditItem = async () => {
-    if (!newToDo.length) {
-      hideEditMode();
-      onErrorOccurs("최소 한 글자 이상 입력해야합니다.");
-      return;
-    }
-
+  const changeItemInfo = async (type: "checkbox" | "editor") => {
     const { isSuccess, data, errorMessage } = await updatesTodo({
       id,
       todo: newToDo,
@@ -51,10 +45,19 @@ const ToDoItem = ({ todo, isCompleted, id, onErrorOccurs, userId }: ToDoItemProp
     });
 
     if (isSuccess && data) {
-      setIsEdited(false);
       todoDataMapDispatch({ type: "UPDATE", value: itemInfo });
+      type === "editor" && setIsEdited(false);
+      type === "checkbox" && setIsChecked(!isChecked);
     } else if (!isSuccess && errorMessage) {
       onErrorOccurs(errorMessage);
+    }
+  };
+
+  const finishEditItem = () => {
+    if (!newToDo.length) {
+      onErrorOccurs("최소 한 글자 이상 입력해야합니다.");
+    } else {
+      changeItemInfo("editor");
     }
   };
 
@@ -65,21 +68,6 @@ const ToDoItem = ({ todo, isCompleted, id, onErrorOccurs, userId }: ToDoItemProp
       todoDataMapDispatch({ type: "DELETE", value: itemInfo });
     } else if (!isSuccess && errorMessage) {
       setIsLoading(false);
-      onErrorOccurs(errorMessage);
-    }
-  };
-
-  const handleCheckBox = async () => {
-    const { isSuccess, data, errorMessage } = await updatesTodo({
-      id,
-      todo: newToDo,
-      isCompleted: isChecked,
-    });
-
-    if (isSuccess && data) {
-      todoDataMapDispatch({ type: "UPDATE", value: itemInfo });
-      setIsChecked(!isChecked);
-    } else if (!isSuccess && errorMessage) {
       onErrorOccurs(errorMessage);
     }
   };
@@ -95,7 +83,11 @@ const ToDoItem = ({ todo, isCompleted, id, onErrorOccurs, userId }: ToDoItemProp
         />
       ) : (
         <S.ToDoTextWrapper>
-          <S.CheckBox type='checkbox' checked={isChecked} onChange={handleCheckBox} />
+          <S.CheckBox
+            type='checkbox'
+            checked={isChecked}
+            onChange={() => changeItemInfo("checkbox")}
+          />
           <S.ToDoText isCompleted={isChecked}>{newToDo}</S.ToDoText>
         </S.ToDoTextWrapper>
       )}

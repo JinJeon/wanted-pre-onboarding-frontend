@@ -1,4 +1,4 @@
-import { FormEvent, useContext } from "react";
+import React, { FormEvent, useContext } from "react";
 
 import { FaPlus as AddIcon } from "react-icons/fa";
 
@@ -45,4 +45,4 @@ const ToDoForm = () => {
   );
 };
 
-export default ToDoForm;
+export default React.memo(ToDoForm);
