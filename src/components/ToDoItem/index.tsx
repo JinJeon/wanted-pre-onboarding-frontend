@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useState } from "react";
 
 import { AiOutlineEdit as FinishEditIcon } from "react-icons/ai";
@@ -9,14 +9,15 @@ import { deleteTodo, TodoDataType, updatesTodo } from "@api/todo";
 import Loading from "@components/Loading";
 import * as S from "@components/ToDoItem/ToDoItem.style";
 import useInput from "@hooks/useInput";
+import { TodoDispatchContext } from "@store/todo";
 import theme from "@styles/theme";
 
 type ToDoItemPropsType = TodoDataType & {
-  onDeleteSuccess: () => void;
   onErrorOccurs: (errorMessage: string) => void;
 };
 
-const ToDoItem = ({ todo, isCompleted, id, onDeleteSuccess, onErrorOccurs }: ToDoItemPropsType) => {
+const ToDoItem = ({ todo, isCompleted, id, onErrorOccurs, userId }: ToDoItemPropsType) => {
+  const todoDataMapDispatch = useContext(TodoDispatchContext);
   const [isLoading, setIsLoading] = useState(false);
   const [isEdited, setIsEdited] = useState(false);
   const [isChecked, setIsChecked] = useState(isCompleted);
@@ -24,6 +25,7 @@ const ToDoItem = ({ todo, isCompleted, id, onDeleteSuccess, onErrorOccurs }: ToD
   const { inputValue: newToDo, onChange: onChangeToDo, setInputValue: setNewToDo } = useInput(todo);
   const FirstButton = !isEdited ? EditIcon : FinishEditIcon;
   const SecondButton = !isEdited ? TrashIcon : QuitEditIcon;
+  const itemInfo = { id, todo, isCompleted, userId };
 
   const showEditMode = () => {
     setPrevToDo(newToDo);
@@ -35,9 +37,10 @@ const ToDoItem = ({ todo, isCompleted, id, onDeleteSuccess, onErrorOccurs }: ToD
     setIsEdited(false);
   };
 
-  const finishEdit = async () => {
+  const finishEditItem = async () => {
     if (!newToDo.length) {
       hideEditMode();
+      onErrorOccurs("최소 한 글자 이상 입력해야합니다.");
       return;
     }
 
@@ -49,16 +52,17 @@ const ToDoItem = ({ todo, isCompleted, id, onDeleteSuccess, onErrorOccurs }: ToD
 
     if (isSuccess && data) {
       setIsEdited(false);
+      todoDataMapDispatch({ type: "UPDATE", value: itemInfo });
     } else if (!isSuccess && errorMessage) {
       onErrorOccurs(errorMessage);
     }
   };
 
-  const deleteThis = async () => {
+  const deleteItem = async () => {
     setIsLoading(true);
     const { isSuccess, errorMessage } = await deleteTodo({ id });
     if (isSuccess) {
-      onDeleteSuccess();
+      todoDataMapDispatch({ type: "DELETE", value: itemInfo });
     } else if (!isSuccess && errorMessage) {
       setIsLoading(false);
       onErrorOccurs(errorMessage);
@@ -73,6 +77,7 @@ const ToDoItem = ({ todo, isCompleted, id, onDeleteSuccess, onErrorOccurs }: ToD
     });
 
     if (isSuccess && data) {
+      todoDataMapDispatch({ type: "UPDATE", value: itemInfo });
       setIsChecked(!isChecked);
     } else if (!isSuccess && errorMessage) {
       onErrorOccurs(errorMessage);
@@ -101,11 +106,11 @@ const ToDoItem = ({ todo, isCompleted, id, onDeleteSuccess, onErrorOccurs }: ToD
         ) : (
           <>
             <FirstButton
-              onClick={!isEdited ? showEditMode : finishEdit}
+              onClick={!isEdited ? showEditMode : finishEditItem}
               color={theme.colors.yellow}
             />
             <SecondButton
-              onClick={!isEdited ? deleteThis : hideEditMode}
+              onClick={!isEdited ? deleteItem : hideEditMode}
               color={theme.colors[isEdited ? "blue" : "red"]}
             />
           </>

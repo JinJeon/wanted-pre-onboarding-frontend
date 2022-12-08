@@ -1,19 +1,22 @@
-import { useEffect, useState } from "react";
+import { useCallback, useContext, useEffect } from "react";
 
 import { FiLogOut as LogoutIcon } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
-import { getTodos, TodoDataType } from "@api/todo";
+import { getTodos } from "@api/todo";
 import useErrorMessage from "@components/ErroMessage";
 import ToDoForm from "@components/ToDoForm";
 import ToDoItem from "@components/ToDoItem";
 import { TODOLIST } from "@constants/words";
-import * as S from "@pages/ToDo/ToDo.style";
+import * as S from "@pages/Todo/Todo.style";
 import { pathName } from "@router";
+import { TodoContext, TodoDispatchContext } from "@store/todo";
 import { removeLocalStorageInfo } from "@utils/localStorage";
 
-const ToDo = () => {
-  const [toDoData, setToDoData] = useState<TodoDataType[]>([]);
+const Todo = () => {
+  const toDoDataMap = useContext(TodoContext);
+  const dispatchTodoDataMap = useContext(TodoDispatchContext);
+  const toDoData = [...toDoDataMap.values()];
   const navigate = useNavigate();
   const { setMessage, ErrorMessage } = useErrorMessage({});
 
@@ -21,15 +24,15 @@ const ToDo = () => {
     const { data, isSuccess, errorMessage } = await getTodos();
 
     if (isSuccess && data) {
-      setToDoData(data);
+      dispatchTodoDataMap({ type: "GET", value: data });
     } else if (!isSuccess && errorMessage) {
       setMessage(errorMessage);
     }
   };
 
-  const showErrorMessage = (errorMessage: string) => {
+  const showErrorMessage = useCallback((errorMessage: string) => {
     setMessage(errorMessage);
-  };
+  }, []);
 
   const logout = () => {
     removeLocalStorageInfo({ key: "access_token" });
@@ -37,14 +40,7 @@ const ToDo = () => {
   };
 
   const toDoList = toDoData
-    .map((info) => (
-      <ToDoItem
-        key={info.id}
-        onDeleteSuccess={getToDoData}
-        onErrorOccurs={showErrorMessage}
-        {...info}
-      />
-    ))
+    .map((info) => <ToDoItem key={info.id} onErrorOccurs={showErrorMessage} {...info} />)
     .reverse();
 
   useEffect(() => {
@@ -64,11 +60,11 @@ const ToDo = () => {
             <LogoutIcon size={16} />
           </S.ButtonIcon>
         </S.Header>
-        <ToDoForm onSubmitSuccess={getToDoData} />
+        <ToDoForm />
         <S.ListWrapper>{toDoList}</S.ListWrapper>
       </S.ToDoWrapper>
     </S.Wrapper>
   );
 };
 
-export default ToDo;
+export default Todo;

@@ -22,7 +22,7 @@ export const ToDoWrapper = styled.div`
     background-color: ${colors.grey0};
     border-radius: 1.5rem;
     padding: 1rem;
-    height: 25rem;
+    height: 24.5rem;
     overflow: hidden;
   `}
 `;
