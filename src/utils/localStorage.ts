@@ -10,8 +10,9 @@ export const getLocalStorageInfo = ({ key }: { key: LocalStorageKeyType }) => {
     return info;
   } catch (error) {
     console.error(error);
-    return null;
   }
+
+  return null;
 };
 
 export const setLocalStorageInfo = ({ key, info }: { key: LocalStorageKeyType; info: any }) => {

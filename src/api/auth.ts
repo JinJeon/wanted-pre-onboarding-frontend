@@ -27,8 +27,8 @@ export const sign = async ({ email, password, signOption }: SingParamsType) => {
 
   try {
     const { data } = await client.post<SignSuccessDataType>("", { email, password });
-    const accessToken = data[ACCESS_TOKEN];
-    setLocalStorageInfo({ key: ACCESS_TOKEN, info: accessToken });
+    const accessToken = data["access_token"];
+    setLocalStorageInfo({ key: "access_token", info: accessToken });
     result.data = data;
     result.isSuccess = true;
   } catch (error) {
@@ -39,7 +39,7 @@ export const sign = async ({ email, password, signOption }: SingParamsType) => {
 };
 
 export const checkIsLogin = () => {
-  const accessToken = getLocalStorageInfo({ key: ACCESS_TOKEN });
+  const accessToken = getLocalStorageInfo({ key: "access_token" });
   // 토큰을 통한 추가적인 확인을 위한 api 요청 필요
   const result = !!accessToken;
   return result;
