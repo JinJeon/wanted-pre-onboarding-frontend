@@ -61,6 +61,7 @@ export const CheckBox = styled.input`
     border: 0.1rem solid gainsboro;
     border-radius: 0.25rem;
     transition: all 0.25s;
+    cursor: pointer;
 
     &:checked {
       border-color: transparent;

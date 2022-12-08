@@ -41,7 +41,7 @@ const ToDoItem = ({ todo, isCompleted, id, onErrorOccurs, userId }: ToDoItemProp
     const { isSuccess, data, errorMessage } = await updatesTodo({
       id,
       todo: newToDo,
-      isCompleted: isChecked,
+      isCompleted: type === "checkbox" ? !isChecked : isChecked,
     });
 
     if (isSuccess && data) {
