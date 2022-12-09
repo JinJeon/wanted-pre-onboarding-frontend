@@ -1,16 +1,11 @@
 import { createGlobalStyle, css } from "styled-components";
 
 import "@styles/animations.css";
-import "@styles/font.css";
+import "@assets/fonts/font.css";
 import { flexCenter } from "./utils";
 
 const GlobalStyle = createGlobalStyle`
 	${() => css`
-    body {
-      font-family: "Noto Sans KR";
-      font-weight: 500;
-    }
-
     code {
       font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
     }
@@ -22,6 +17,8 @@ const GlobalStyle = createGlobalStyle`
     }
 
     .App {
+      font-family: "Noto Sans KR";
+      font-weight: 500;
       padding: 1rem;
       height: 100vh;
       ${flexCenter};

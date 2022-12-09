@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 
-import { noScrollBar } from "@styles/utils";
+import { flexCenter, noScrollBar } from "@styles/utils";
 
 export const Wrapper = styled.div`
   display: flex;
@@ -42,6 +42,7 @@ export const Title = styled.h2`
 `;
 
 export const ButtonIcon = styled.button`
+  ${flexCenter};
   width: 1.5rem;
 `;
 

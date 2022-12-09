@@ -4,6 +4,7 @@ const { override, addWebpackAlias } = require("customize-cra");
 
 const alias = {};
 const directories = [
+  "assets",
   "api",
   "constants",
   "components",

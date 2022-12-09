@@ -1,6 +1,6 @@
 @font-face {
   font-family: "Noto Sans KR";
-  font-display: fallback;
+  font-display: block;
   font-weight: 500;
   font-style: normal;
   src: url("./NotoSansKR-Medium.otf") format("opentype"),
@@ -9,7 +9,7 @@
 
 @font-face {
   font-family: "Noto Sans KR";
-  font-display: fallback;
+  font-display: block;
   font-weight: 700;
   font-style: normal;
   src: url("./NotoSansKR-Bold.otf") format("opentype"), url("./NotoSansKR-Bold.woff") format("woff");
