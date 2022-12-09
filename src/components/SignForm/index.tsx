@@ -6,20 +6,13 @@ import { SignOptionType, sign } from "@api/auth";
 import Button from "@components/Button";
 import ErrorMessage from "@components/ErroMessage";
 import * as S from "@components/SignForm/SignForm.style";
-import {
-  failToLogin,
-  failToSignUp,
-  incorrectEmailFormat,
-  incorrectPassword,
-  incorrectPasswordLength,
-  successToSignUp,
-} from "@constants/sentences";
+import { failToLogin, failToSignUp, successToSignUp } from "@constants/sentences";
 import { CANCEL, EMAIL, PASSWORD, PASSWORDCHECK, SIGNIN, SIGNUP } from "@constants/words";
 import { useDebounce } from "@hooks/useDebounce";
 import useInput from "@hooks/useInput";
 import { pathName } from "@router";
 import { SetErrorMessageContext } from "@store/errorMessage";
-import { isEmailExp } from "@utils/regExp";
+import { validateFormat } from "@utils/validateFormat";
 
 type SignFormPropsType = {
   signOption: SignOptionType;
@@ -86,22 +79,18 @@ const SignForm = ({ signOption, changeSignOption, receivedMessage }: SignFormPro
     }
   };
 
-  const checkIsInfoCorrectFormat = () => {
-    const isEmailCorrectFormat = isEmailExp(email);
-    const isPasswordCorrectFormat = password.length >= 8;
-    const isSamePassword = signOption === "signin" || password === passwordCheck;
-    let newMessage;
+  const checkInfoFormat = () => {
+    const isValue = email.length || password.length;
+    if (!isValue) return;
 
-    if (!isEmailCorrectFormat) {
-      newMessage = incorrectEmailFormat;
-    } else if (!isPasswordCorrectFormat) {
-      newMessage = incorrectPasswordLength;
-    } else if (!isSamePassword) {
-      newMessage = incorrectPassword;
-    }
+    const { isCorrect, errorMessage } = validateFormat({
+      email,
+      password,
+      passwordCheck: signOption === "signup" && passwordCheck,
+    });
 
-    if (newMessage) {
-      setErrorMessage(newMessage);
+    if (!isCorrect && errorMessage) {
+      setErrorMessage(errorMessage);
     } else {
       setIsSubmitPossible(true);
     }
@@ -119,7 +108,7 @@ const SignForm = ({ signOption, changeSignOption, receivedMessage }: SignFormPro
     setIsSubmitPossible(false);
   }, [email, password, passwordCheck]);
 
-  useDebounce({ func: checkIsInfoCorrectFormat, delay: 500, deps: [email, password] });
+  useDebounce({ func: checkInfoFormat, delay: 500, deps: [email, password, passwordCheck] });
 
   return (
     <S.SignForm onSubmit={checkSign}>
