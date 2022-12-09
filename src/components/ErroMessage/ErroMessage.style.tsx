@@ -5,13 +5,13 @@ import { standardHeight } from "@styles/utils";
 export const Wrapper = styled.div<{ isError: boolean }>`
   ${({ theme: { colors }, isError }) => css`
     background-color: ${colors.red};
+    display: flex;
+    align-items: center;
     min-height: ${standardHeight};
-    line-height: 1.5rem;
     border-radius: 0.5rem;
     width: 100%;
     padding: 0.4rem;
     font-size: 0.8rem;
-    font-weight: 700;
 
     ${!isError &&
     css`
