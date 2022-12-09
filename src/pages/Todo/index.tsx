@@ -8,7 +8,7 @@ import ErrorMessage from "@components/ErroMessage";
 import ToDoForm from "@components/ToDoForm";
 import ToDoItem from "@components/ToDoItem";
 import { TODOLIST } from "@constants/words";
-import * as S from "@pages/Todo/TodoChange.style";
+import * as S from "@pages/Todo/Todo.style";
 import { pathName } from "@router";
 import { SetErrorMessageContext } from "@store/errorMessage";
 import { TodoContext, TodoDispatchContext } from "@store/todo";
