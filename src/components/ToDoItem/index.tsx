@@ -8,6 +8,7 @@ import { FiDelete as QuitEditIcon } from "react-icons/fi";
 import { deleteTodo, TodoDataType, updatesTodo } from "@api/todo";
 import Loading from "@components/Loading";
 import * as S from "@components/ToDoItem/ToDoItem.style";
+import { needOneWord } from "@constants/sentences";
 import useInput from "@hooks/useInput";
 import { SetErrorMessageContext } from "@store/errorMessage";
 import { TodoDispatchContext } from "@store/todo";
@@ -55,7 +56,7 @@ const ToDoItem = ({ todo, isCompleted, id, userId }: ToDoItemPropsType) => {
 
   const finishEditItem = () => {
     if (!newToDo.length) {
-      setErrorMessage("최소 한 글자 이상 입력해야합니다.");
+      setErrorMessage(needOneWord);
     } else {
       changeItemInfo("editor");
     }

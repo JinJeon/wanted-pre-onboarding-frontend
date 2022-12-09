@@ -4,8 +4,9 @@ import { FaPlus as AddIcon } from "react-icons/fa";
 
 import { createTodo } from "@api/todo";
 import * as S from "@components/ToDoForm/ToDoForm.style";
-import { writeWhatToDo } from "@constants/sentences";
+import { needOneWord, writeWhatToDo } from "@constants/sentences";
 import useInput from "@hooks/useInput";
+import { SetErrorMessageContext } from "@store/errorMessage";
 import { TodoDispatchContext } from "@store/todo";
 
 const toDoMaxLength = 50;
@@ -17,16 +18,21 @@ const ToDoForm = () => {
     onChange: onChangeNewToDo,
   } = useInput("");
   const todoDataMapDispatch = useContext(TodoDispatchContext);
+  const setErrorMessage = useContext(SetErrorMessageContext);
 
   const submitToDo = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!newToDo.length) {
+      setErrorMessage(needOneWord);
+      return;
+    }
 
     const { data, isSuccess, errorMessage } = await createTodo({ todo: newToDo });
     if (isSuccess && data) {
       todoDataMapDispatch({ type: "CREATE", value: data });
       setNewToDo("");
     } else if (!isSuccess && errorMessage) {
-      // show that error occurs
+      setErrorMessage(errorMessage);
     }
   };
 

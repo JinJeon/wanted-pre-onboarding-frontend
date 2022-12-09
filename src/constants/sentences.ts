@@ -7,3 +7,4 @@ export const writeWhatToDo = "WRITE WHAT TO DO";
 export const incorrectEmailFormat = "잘못된 이메일 형식입니다.";
 export const incorrectPassword = "비밀번호가 일치하지 않습니다.";
 export const incorrectPasswordLength = "비밀번호는 8자리 이상이여야 합니다.";
+export const needOneWord = "최소 한 글자 이상 입력해야합니다.";
