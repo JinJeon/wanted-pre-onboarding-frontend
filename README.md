@@ -19,11 +19,11 @@ npm run start
 
 ### 회원 가입 ∙ 로그인
 
-![auth.mov](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/71f2516a-751d-4ec1-b6ef-6391c29a3fcd/auth.mov)
+![AUTH](./videos/auth.gif)
 
 ### 투두 리스트
 
-![todolist.mov](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/cb0a68e8-7757-4126-9f5c-60b3c4744459/todolist.mov)
+![TO DO LIST](./videos/todolist.gif)
 
 ## 4. 기능 구현 정도
 
