@@ -13,7 +13,7 @@ npm run start
 
 ## 2. 배포 주소
 
-[https://jinjeon-wanted.web.app/todo](https://jinjeon-wanted.web.app/todo)
+[https://jinjeon-wanted.web.app](https://jinjeon-wanted.web.app)
 
 ## 3. 구현 영상
 
